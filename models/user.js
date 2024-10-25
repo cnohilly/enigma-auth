@@ -25,6 +25,29 @@ const userSchema = new mongoose.Schema({
             message: 'Password must contain at least one uppercase letter and one number'
         },
         select: false
+    },
+    username: {
+        type: String,
+        required: [true, 'Username is required'],
+        unique: true,
+        minlength: [6, 'Username must be at least 6 characters'],
+        trim: true,
+        validate: {
+            validator: function (v) {
+                return /^[a-zA-Z0-9]+$/.test(v);
+            },
+            message: props => `${props.value} is not a valid username. Only letters and numbers are allowed.`
+        }
+    },
+    firstName: {
+        type: String,
+        trim: true,
+        default: ''
+    },
+    lastName: {
+        type: String,
+        trim: true,
+        default: ''
     }
 }, { timestamps: true });
 
