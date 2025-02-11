@@ -9,7 +9,19 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+const corsOriginCheck = (origin, callback) => {
+    if (process.env.CORS_ORIGINS.split(';').includes(origin)) {
+        callback(null, true);
+    } else {
+        callback(new Error(`Origin (${origin}) not allowed in CORS`));
+    }
+}
+const corsOptions = {
+    origin: corsOriginCheck,
+    optionsSuccessStatus: 200
+}
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 mongoose.connect(process.env.MONGO_URI)
