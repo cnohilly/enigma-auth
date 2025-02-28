@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const { readKey } = require('../util/Util');
 
 const protect = async (req, res, next) => {
     let token;
@@ -8,7 +9,7 @@ const protect = async (req, res, next) => {
     ) {
         token = req.headers.authorization.split(' ')[1];
 
-        jwt.verify(token, process.env.PUBLIC_KEY, {
+        jwt.verify(token, readKey(process.env.PUBLIC_KEY), {
             algorithms: ['RS256']
         }, async (err, decoded) => {
             if (err) {

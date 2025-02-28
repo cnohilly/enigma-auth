@@ -1,8 +1,9 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/user.js';
+import { readKey } from '../util/Util.js';
 
 const generateToken = (user) => {
-    return jwt.sign({ id: user._id }, process.env.PRIVATE_KEY, {
+    return jwt.sign({ id: user._id }, readKey(process.env.PRIVATE_KEY), {
         algorithm: 'RS256',
         expiresIn: '1h'
     });
@@ -49,7 +50,7 @@ export const verifyToken = async (req, res) => {
             return res.status(400).json({ message: 'Token is required' });
         }
 
-        jwt.verify(token, process.env.PUBLIC_KEY, {
+        jwt.verify(token, readKey(process.env.PUBLIC_KEY), {
             algorithms: ['RS256']
         }, async (err, decoded) => {
             if (err) {
